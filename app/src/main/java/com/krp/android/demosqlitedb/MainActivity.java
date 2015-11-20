@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put("name", ((EditText) findViewById(R.id.txtName))
                 .getText().toString());
+        values.put("age", 20);
 
         db = dbHelper.getWritableDatabase();
         if (db != null) {
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 StringBuilder res=new StringBuilder();
                 while (!cursor.isAfterLast()) {
                     res.append("\n"+cursor.getString(cursor.getColumnIndex("id"))+ "-"+
-                            cursor.getString(cursor.getColumnIndex("name")));
+                            cursor.getString(cursor.getColumnIndex("name"))+ "-"+
+                            cursor.getString(cursor.getColumnIndex("age")));
                     cursor.moveToNext();
                 }
                 ((TextView) findViewById(R.id.res)).setText(res);
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     static final String DATABASE_NAME = "com.krp.android.db";
     static final String TABLE_NAME = "names";
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 3;
     static final String CREATE_DB_TABLE = " CREATE TABLE " + TABLE_NAME
             + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + " name TEXT NOT NULL);";
@@ -75,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-            onCreate(db);
+            db.execSQL("ALTER TABLE " + TABLE_NAME+" ADD COLUMN age INTEGER");
         }
     }
 }
